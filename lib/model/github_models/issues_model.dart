@@ -1,0 +1,166 @@
+import 'dart:convert';
+import 'package:hive/hive.dart';
+
+part 'issues_model.g.dart';
+
+@HiveType(typeId: 2)
+class IssuesModel extends HiveObject {
+  @HiveField(0)
+  final String title;
+  @HiveField(1)
+  final String body;
+  @HiveField(2)
+  final String commentsUrl;
+  @HiveField(3)
+  final String creador;
+  @HiveField(4)
+  final String creadorUrl;
+  @HiveField(5)
+  final String creadorAvatarUrl;
+  @HiveField(6)
+  final String state;
+  @HiveField(7)
+  final int comments;
+  @HiveField(8)
+  final DateTime createdAt;
+  @HiveField(9)
+  final DateTime updatedAt;
+  @HiveField(10)
+  final List<LabesIssuesModel?> labels;
+
+  IssuesModel({
+    required this.title,
+    required this.body,
+    required this.commentsUrl,
+    required this.creador,
+    required this.creadorUrl,
+    required this.creadorAvatarUrl,
+    required this.state,
+    required this.comments,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.labels,
+  });
+
+  IssuesModel copyWith({
+    String? title,
+    String? body,
+    String? commentsUrl,
+    String? creador,
+    String? creadorUrl,
+    String? creadorAvatarUrl,
+    String? state,
+    int? comments,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<LabesIssuesModel?>? labels,
+  }) {
+    return IssuesModel(
+      title: title ?? this.title,
+      body: body ?? this.body,
+      commentsUrl: commentsUrl ?? this.commentsUrl,
+      creador: creador ?? this.creador,
+      creadorUrl: creadorUrl ?? this.creadorUrl,
+      creadorAvatarUrl: creadorAvatarUrl ?? this.creadorAvatarUrl,
+      state: state ?? this.state,
+      comments: comments ?? this.comments,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      labels: labels ?? this.labels,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'body': body,
+      'commentsUrl': commentsUrl,
+      'creador': creador,
+      'creadorUrl': creadorUrl,
+      'creadorAvatarUrl': creadorAvatarUrl,
+      'state': state,
+      'comments': comments,
+      'createdAt': createdAt.toString(),
+      'updatedAt': updatedAt.toString(),
+      'labels': labels.map((x) => x?.toMap()).toList(),
+    };
+  }
+
+  factory IssuesModel.fromMap(Map<String, dynamic> map) {
+    return IssuesModel(
+      title: map['title'] ?? '',
+      body: map['body'] ?? '',
+      commentsUrl: map['comments_url'] ?? '',
+      creador: map['user']['login'] ?? '',
+      creadorUrl: map['user']['html_url'] ?? '',
+      creadorAvatarUrl: map['user']['avatar_url'] ?? '',
+      state: map['state'] ?? '',
+      comments: map['comments']?.toInt() ?? 0,
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
+      labels: List<LabesIssuesModel?>.from(
+          map['labels']?.map((x) => LabesIssuesModel.fromMap(x))),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory IssuesModel.fromJson(String source) =>
+      IssuesModel.fromMap(json.decode(source));
+}
+
+@HiveType(typeId: 3)
+class LabesIssuesModel extends HiveObject {
+  @HiveField(0)
+  final String url;
+  @HiveField(1)
+  final String name;
+  @HiveField(2)
+  final String color;
+  @HiveField(3)
+  final String description;
+
+  LabesIssuesModel({
+    required this.url,
+    required this.name,
+    required this.color,
+    required this.description,
+  });
+
+  LabesIssuesModel copyWith({
+    String? url,
+    String? name,
+    String? color,
+    String? description,
+  }) {
+    return LabesIssuesModel(
+      url: url ?? this.url,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      description: description ?? this.description,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'url': url,
+      'name': name,
+      'color': color,
+      'description': description,
+    };
+  }
+
+  factory LabesIssuesModel.fromMap(Map<String, dynamic> map) {
+    return LabesIssuesModel(
+      url: map['url'] ?? '',
+      name: map['name'] ?? '',
+      color: map['color'] ?? '',
+      description: map['description'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory LabesIssuesModel.fromJson(String source) =>
+      LabesIssuesModel.fromMap(json.decode(source));
+}
