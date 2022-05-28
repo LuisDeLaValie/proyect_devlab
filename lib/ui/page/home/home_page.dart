@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:proyect_devlab/api/github_api.dart';
 import 'package:proyect_devlab/model/github_models/repositorio_model.dart';
+import 'package:proyect_devlab/model/proyecto_models/proyecto_model.dart';
 import 'package:proyect_devlab/services/manejo_archivos_services.dart';
+import 'package:proyect_devlab/services/navegacion_servies.dart';
 import 'package:proyect_devlab/ui/page/home/widgets/items_cards.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,31 +24,23 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: createproyect,
+            onPressed: modalProyectoCrear,
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: getrepos(),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<Map<dynamic, dynamic>>?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return GridView.builder(
-              itemCount: snapshot.data?.length ?? 0,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              itemBuilder: (_, index) => ItemsCards(
-                repo: RepositorioModel.fromMap(
-                  Map<String, dynamic>.from(snapshot.data![index]),
-                ),
-              ),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: ValueListenableBuilder<Box<ProyectoModel>>(
+        valueListenable: Hive.box<ProyectoModel>('Proyectos').listenable(),
+        builder: (context, box, widget) {
+          var values = box.values.toList();
+          return GridView.builder(
+            itemCount: values.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemBuilder: (_, index) => ItemsCards(
+              repo: values[index],
+            ),
+          );
         },
       ),
     );
@@ -63,7 +59,44 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> createproyect() async {
-    ManejoArchivosServices().iniciarProyecto();
+  void modalProyectoCrear() {
+    showDialog(
+      context: context,
+      builder: (_) => SimpleDialog(
+        title: Text("Crear nuevo Prollecto"),
+        children: [
+          TextField(
+            decoration: const InputDecoration(
+              labelText: "Nombre del proyecto",
+            ),
+            onSubmitted: createproyect,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> createproyect(String nombre) async {
+    Navigator.of(context).pop();
+    try {
+      var path = await ManejoArchivosServices().iniciarProyecto(nombre);
+      var box = Hive.box<ProyectoModel>('Proyectos');
+      var id = box.length;
+      box.put(
+          id,
+          ProyectoModel(
+            id: id,
+            nombre: nombre,
+            creador: "LuisDeLaValie",
+            repositorio: "",
+            path: path!,
+            createAt: DateTime.now(),
+          ));
+      NavegacionServies.navigateTo(proyectoRoute.replaceAll(":id", "$id"));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+    }
   }
 }

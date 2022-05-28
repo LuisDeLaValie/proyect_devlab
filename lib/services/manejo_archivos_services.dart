@@ -1,22 +1,27 @@
 import 'dart:io';
 
+import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ManejoArchivosServices {
-  void iniciarProyecto() async {
-    var _appDocDir = await getDownloadsDirectory();
-    // var _appDocDir = await getExternalStorageDirectories();
+  static Future<String?> get localPath async {
+    var _appDocDir = (await getDownloadsDirectory())?.path.split("/");
+    _appDocDir?.removeLast();
+    _appDocDir?.add("DevLab");
+    var path = _appDocDir?.join("/");
+    return path;
+  }
 
-    // Process.run(r'echo', [r'$HOME']).then((result) {
-    //   print(result.stderr);
-    //   print(result.stdout);
-    // });
-
-    print(_appDocDir);
-    Directory.fromUri(Uri.parse('/Users/emiliopartida/DevLab')) 
-        .create(recursive: true)
-        .then((Directory directory) {
+  Future<String?> iniciarProyecto(String nombre) async {
+    var box = Hive.box('deviceData');
+    var path = box.get('HOMEPath');
+    if (path != null) {
+      var directory = await Directory.fromUri(Uri.parse("$path/$nombre"))
+          .create(recursive: true);
       print("directory.path: ${directory.path}");
-    });
+      return directory.path;
+    } else {
+      throw "No se encontro el directorio";
+    }
   }
 }

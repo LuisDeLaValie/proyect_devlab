@@ -38,6 +38,10 @@ class Sesion {
     var usergithub = github?.copyWith(
       perfil: data['html_url'],
       id: data['id'],
+      user: data['login'],
+      name: data['name'],
+      avatarUrl: data['avatar_url'],
+      email: data['email'],
     );
 
     _box.putAll({
@@ -55,12 +59,19 @@ class SesionGitHub {
   final String accessToken;
   final String tokenType;
   final String perfil;
-
+  final String user;
+  final String name;
+  final String avatarUrl;
+  final String email;
   SesionGitHub({
     required this.id,
     required this.accessToken,
     required this.tokenType,
     required this.perfil,
+    required this.user,
+    required this.name,
+    required this.avatarUrl,
+    required this.email,
   });
 
   SesionGitHub copyWith({
@@ -68,12 +79,20 @@ class SesionGitHub {
     String? accessToken,
     String? tokenType,
     String? perfil,
+    String? user,
+    String? name,
+    String? avatarUrl,
+    String? email,
   }) {
     return SesionGitHub(
       id: id ?? this.id,
       accessToken: accessToken ?? this.accessToken,
       tokenType: tokenType ?? this.tokenType,
       perfil: perfil ?? this.perfil,
+      user: user ?? this.user,
+      name: name ?? this.name,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      email: email ?? this.email,
     );
   }
 
@@ -82,7 +101,11 @@ class SesionGitHub {
       'id': id,
       'access_token': accessToken,
       'token_type': tokenType,
-      'html_url': perfil,
+      'perfil': perfil,
+      'user': user,
+      'name': name,
+      'avatar_url': avatarUrl,
+      'email': email,
     };
   }
 
@@ -91,7 +114,11 @@ class SesionGitHub {
       id: map['id']?.toInt() ?? 0,
       accessToken: map['access_token'] ?? '',
       tokenType: map['token_type'] ?? '',
-      perfil: map['html_url'] ?? '',
+      perfil: map['perfil'] ?? '',
+      user: map['user'] ?? '',
+      name: map['name'] ?? '',
+      avatarUrl: map['avatar_url'] ?? '',
+      email: map['email'] ?? '',
     );
   }
 

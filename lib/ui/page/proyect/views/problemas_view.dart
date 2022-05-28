@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:proyect_devlab/api/github_api.dart';
 import 'package:proyect_devlab/model/github_models/issues_model.dart';
+import 'package:proyect_devlab/provider/proyecto_provider.dart';
 
 class ProblemasView extends StatefulWidget {
-  final String fullNameRepo;
-  const ProblemasView({
-    Key? key,
-    required this.fullNameRepo,
-  }) : super(key: key);
+  const ProblemasView({Key? key}) : super(key: key);
 
   @override
   _ProblemasViewState createState() => _ProblemasViewState();
@@ -83,9 +81,13 @@ class _ProblemasViewState extends State<ProblemasView> {
   }
 
   void getIssues() async {
+    final nombre = Provider.of<ProyectoProvider>(context, listen: false)
+            .proyecto
+            .repositorioMoel
+            ?.fullName ??
+        "";
     try {
-      var res = await GithubApi().get('repos/${widget.fullNameRepo}/issues')
-          as List<dynamic>;
+      var res = await GithubApi().get('repos/$nombre/issues') as List<dynamic>;
 
       setState(() {
         listaIssues = res.map((e) => IssuesModel.fromMap(e)).toList();

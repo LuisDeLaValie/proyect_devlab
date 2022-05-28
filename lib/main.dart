@@ -5,6 +5,7 @@ import 'package:proyect_devlab/model/github_models/repositorio_model.dart';
 import 'package:proyect_devlab/model/proyecto_models/proyecto_model.dart';
 
 import 'global/sesion.dart';
+import 'services/manejo_archivos_services.dart';
 import 'services/navegacion_servies.dart';
 import 'services/router/rout.dart';
 
@@ -17,10 +18,19 @@ void main() async {
   Hive.registerAdapter(RepositorioModelAdapter());
   Hive.registerAdapter(IssuesModelAdapter());
 
-  var sesion = await Hive.openBox('sesionData');
+  await Hive.openBox('sesionData');
   var devicebox = await Hive.openBox('deviceData');
 
-  devicebox.put('github_client_id', 'c394dd917833466ceef1');
+  var pro = await Hive.openBox<ProyectoModel>('Proyectos');
+  await Hive.openBox<RepositorioModel>('Repositorios');
+  await Hive.openBox<IssuesModel>('Issues');
+  pro.clear();
+  if (devicebox.isEmpty) {
+    devicebox.put('github_client_id', 'c394dd917833466ceef1');
+    ManejoArchivosServices.localPath.then((path) {
+      devicebox.put('HOMEPath', path);
+    });
+  }
 
   runApp(const MyApp());
 }

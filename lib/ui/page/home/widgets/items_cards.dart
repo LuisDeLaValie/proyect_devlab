@@ -5,7 +5,7 @@ import 'package:proyect_devlab/model/github_models/repositorio_model.dart';
 import 'package:proyect_devlab/services/navegacion_servies.dart';
 
 class ItemsCards extends StatelessWidget {
-  final RepositorioModel repo;
+  final ProyectoModel repo;
   const ItemsCards({
     Key? key,
     required this.repo,
@@ -17,27 +17,15 @@ class ItemsCards extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
-          var proyecto = ProyectoModel(
-            id: 0,
-            nombre: repo.name,
-            creador: repo.creador,
-            repositorio: repo.htmlUrl,
-            path: '',
-            createAt: repo.createdAt,
-            repositorioMoel: repo,
-          );
-          NavegacionServies.navigateTo(proyectoRoute, arguments: proyecto);
+          NavegacionServies.navigateTo(
+              proyectoRoute.replaceAll(":id", "${repo.id}"));
         },
         child: Material(
           elevation: 2,
           child: Column(
             children: [
-              Text(repo.visibility,
-                  style: Theme.of(context).textTheme.bodyMedium),
               Spacer(),
-              Text(repo.name, style: Theme.of(context).textTheme.bodyLarge),
-              Text(repo.language,
-                  style: Theme.of(context).textTheme.labelSmall),
+              Text(repo.nombre, style: Theme.of(context).textTheme.bodyLarge),
             ],
           ),
         ),
