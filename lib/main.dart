@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:proyect_devlab/model/github_models/issues_model.dart';
@@ -18,19 +20,20 @@ void main() async {
   Hive.registerAdapter(RepositorioModelAdapter());
   Hive.registerAdapter(IssuesModelAdapter());
 
-  await Hive.openBox('sesionData');
+  var datasesion = await Hive.openBox('sesionData');
   var devicebox = await Hive.openBox('deviceData');
-
-  var pro = await Hive.openBox<ProyectoModel>('Proyectos');
+  await Hive.openBox<ProyectoModel>('Proyectos');
   await Hive.openBox<RepositorioModel>('Repositorios');
   await Hive.openBox<IssuesModel>('Issues');
-  pro.clear();
+
   if (devicebox.isEmpty) {
     devicebox.put('github_client_id', 'c394dd917833466ceef1');
     ManejoArchivosServices.localPath.then((path) {
       devicebox.put('HOMEPath', path);
     });
   }
+  log(datasesion.toMap().toString(), name: 'datasesion');
+  log(devicebox.toMap().toString(), name: 'devicebox');
 
   runApp(const MyApp());
 }
@@ -65,7 +68,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
+      title: 'DevLab',
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          color: Color(0xff44475A),
+          elevation: 0,
+          titleTextStyle: TextStyle(color: Color(0xffF8F8F2)),
+        ),
+        scaffoldBackgroundColor: const Color(0xff282a36),
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: baseUrl,
       navigatorKey: NavegacionServies.navigatorKey,

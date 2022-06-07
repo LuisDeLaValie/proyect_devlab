@@ -18,7 +18,6 @@ class ManejoArchivosServices {
     if (path != null) {
       var directory = await Directory.fromUri(Uri.parse("$path/$nombre"))
           .create(recursive: true);
-      print("directory.path: ${directory.path}");
       return directory.path;
     } else {
       throw "No se encontro el directorio";

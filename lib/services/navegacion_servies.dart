@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-const String loginRoute = '/login';
-const String loginCodigoRoute = '/login/code_verification';
-const String homeRoute = '/home';
-const String proyectoRoute = '/proyecto/:id';
+const String loginRoute = 'login';
+const String loginCodigoRoute = 'login/code_verification';
+const String homeRoute = 'home';
+const String proyectoRoute = 'proyecto/:id';
 
 // clase para manejar la navegacion entre paginas
 class NavegacionServies {

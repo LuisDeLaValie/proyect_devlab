@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyect_devlab/model/proyecto_models/proyecto_model.dart';
 
-import 'package:proyect_devlab/model/github_models/repositorio_model.dart';
 import 'package:proyect_devlab/services/navegacion_servies.dart';
 
 class ItemsCards extends StatelessWidget {
@@ -24,7 +23,7 @@ class ItemsCards extends StatelessWidget {
           elevation: 2,
           child: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               Text(repo.nombre, style: Theme.of(context).textTheme.bodyLarge),
             ],
           ),

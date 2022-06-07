@@ -76,7 +76,7 @@ class _HeaderViewState extends State<HeaderView> {
         children: [
           TextField(
             decoration: InputDecoration(
-              labelText: "${Sesion.github?.user}/{repo}",
+              labelText: "${Sesion.sesionGitHub?.user}/{repo}",
             ),
             onSubmitted: getInfoRepo,
           ),
@@ -123,7 +123,6 @@ class _HeaderViewState extends State<HeaderView> {
         clonarrepo(repo.cloneUrl);
       }
     } catch (e) {
-      print(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
       ));

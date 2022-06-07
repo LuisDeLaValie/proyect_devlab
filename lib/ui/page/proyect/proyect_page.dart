@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,8 +6,6 @@ import 'package:proyect_devlab/model/proyecto_models/proyecto_model.dart';
 import '../../../provider/proyecto_provider.dart';
 import 'views/curpo_general_view.dart';
 import 'views/header_view.dart';
-import 'views/problemas_view.dart';
-import 'widget/tab_bar_custom.dart';
 
 class ProyectPage extends StatelessWidget {
   final ProyectoModel proyecto;

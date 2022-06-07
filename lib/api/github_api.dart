@@ -9,7 +9,8 @@ class GithubApi {
   final String _baseUrl = 'api.github.com';
 
   GithubApi() {
-    String g = "${Sesion.github!.tokenType} ${Sesion.github!.accessToken}";
+    String g =
+        "${Sesion.sesionGitHub!.tokenType} ${Sesion.sesionGitHub!.accessToken}";
     _headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.acceptHeader: "application/vnd.github.v3+json",
@@ -17,7 +18,7 @@ class GithubApi {
     };
   }
 
-  Future<dynamic?> post(String path, [Map? data]) async {
+  Future<dynamic> post(String path, [Map? data]) async {
     try {
       var res = await http.post(
         Uri.https(_baseUrl, path),
@@ -31,13 +32,12 @@ class GithubApi {
     }
   }
 
-  Future<dynamic?> get(
+  Future<dynamic> get(
     String path, [
     Map? data,
     Map<String, dynamic>? queryParameters,
   ]) async {
     try {
-    
       var request =
           http.Request('GET', Uri.https(_baseUrl, path, queryParameters));
       // http.Request('GET', Uri.parse('https://api.github.com/user/repos'));

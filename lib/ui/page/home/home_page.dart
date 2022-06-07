@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:proyect_devlab/api/github_api.dart';
-import 'package:proyect_devlab/model/github_models/repositorio_model.dart';
 import 'package:proyect_devlab/model/proyecto_models/proyecto_model.dart';
 import 'package:proyect_devlab/services/manejo_archivos_services.dart';
 import 'package:proyect_devlab/services/navegacion_servies.dart';
+import 'package:proyect_devlab/ui/layout/desktop/home_desktop_layout.dart';
 import 'package:proyect_devlab/ui/page/home/widgets/items_cards.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,16 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: modalProyectoCrear,
-          ),
-        ],
-      ),
+    return HomeDesktopLayout(
+      title: "Desarrollo de Aplicaciones",
       body: ValueListenableBuilder<Box<ProyectoModel>>(
         valueListenable: Hive.box<ProyectoModel>('Proyectos').listenable(),
         builder: (context, box, widget) {
@@ -52,7 +43,6 @@ class _HomePageState extends State<HomePage> {
       var list = res.map((e) => Map<dynamic, dynamic>.from(e)).toList();
       return list;
     } catch (e) {
-      print(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
       ));
@@ -63,7 +53,7 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (_) => SimpleDialog(
-        title: Text("Crear nuevo Prollecto"),
+        title: const Text("Crear nuevo Prollecto"),
         children: [
           TextField(
             decoration: const InputDecoration(

@@ -8,15 +8,44 @@ enum SesionStatus { login, logout, verifying }
 class Sesion {
   static final _box = Hive.box('sesionData');
 
-  static String? user = _box.get('user');
-  static String? name = _box.get('name');
-  static String? email = _box.get('email');
-  static String? avatar = _box.get('avatar_url');
-  static SesionStatus status = SesionStatus.values
-      .byName(_box.get('sesion_status') ?? SesionStatus.logout.name);
+  static String? get user => _box.get('user');
+  static set user(String? val) {
+    _box.put('user', val);
+  }
 
-  static SesionGitHub? github =
-      SesionGitHub.fromMap(Map<String, dynamic>.from(_box.get('Github') ?? {}));
+  static String? get name => _box.get('name');
+  static set name(String? val) {
+    _box.put('name', val);
+  }
+
+  static String? get email => _box.get('email');
+  static set email(String? val) {
+    _box.put('email', val);
+  }
+
+  static String? get avatar => _box.get('avatar_url');
+  static set avatar(String? val) {
+    _box.put('avatar_url', val);
+  }
+
+  static SesionStatus get status => SesionStatus.values.byName(
+      _box.get('sesion_status', defaultValue: SesionStatus.logout.name));
+  static set status(SesionStatus val) {
+    _box.put('sesion_status', val);
+  }
+
+  static SesionGitHub? get sesionGitHub {
+    var data = _box.get('Github');
+    if (data == null) {
+      return SesionGitHub.fromMap(Map<String, dynamic>.from(data));
+    } else {
+      return null;
+    }
+  }
+
+  static set sesionGitHub(SesionGitHub? val) {
+    _box.put('Github', val);
+  }
 
   static void getAcountGithub() async {
     var boxdevices = Hive.box('deviceData');
@@ -30,12 +59,13 @@ class Sesion {
       },
       headers: {
         "Accept": "application/vnd.github.v3+json",
-        "Authorization": "${github?.tokenType} ${github?.accessToken}",
+        "Authorization":
+            "${sesionGitHub?.tokenType} ${sesionGitHub?.accessToken}",
       },
     );
     var data = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
 
-    var usergithub = github?.copyWith(
+    var usergithub = sesionGitHub?.copyWith(
       perfil: data['html_url'],
       id: data['id'],
       user: data['login'],

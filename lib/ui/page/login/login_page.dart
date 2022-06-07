@@ -26,8 +26,8 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              child: const Text('Ir a GitHub'),
               onPressed: getCode,
+              child: const Text('Ir a GitHub'),
             ),
           ],
         ),
