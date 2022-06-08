@@ -5,10 +5,10 @@ import 'package:path_provider/path_provider.dart';
 
 class ManejoArchivosServices {
   static Future<String?> get localPath async {
-    var _appDocDir = (await getDownloadsDirectory())?.path.split("/");
-    _appDocDir?.removeLast();
-    _appDocDir?.add("DevLab");
-    var path = _appDocDir?.join("/");
+    var appDocDir = (await getDownloadsDirectory())?.path.split("/");
+    appDocDir?.removeLast();
+    appDocDir?.add("DevLab");
+    var path = appDocDir?.join("/");
     return path;
   }
 

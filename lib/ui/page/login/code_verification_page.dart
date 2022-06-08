@@ -3,17 +3,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:proyect_devlab/global/devices_data.dart';
 import 'package:proyect_devlab/global/sesion.dart';
 import 'package:proyect_devlab/services/navegacion_servies.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../model/perfiles_model.dart';
+import '../../shared/theme.dart';
+
 class CodeVerificationPage extends StatefulWidget {
-  final Map<String, dynamic> arguments;
-  const CodeVerificationPage({
-    Key? key,
-    required this.arguments,
-  }) : super(key: key);
+  const CodeVerificationPage({Key? key}) : super(key: key);
 
   @override
   State<CodeVerificationPage> createState() => _CodeVerificationPageState();
@@ -23,17 +22,18 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
   late Timer timer1;
   late Timer timer2;
   String tiempocaduca = "";
-  late int interval;
-
+  late GithubDevices githubDevices;
   @override
   void initState() {
     super.initState();
-    var caduca = DateTime.parse(widget.arguments['expires_in']);
-    interval = widget.arguments['interval'] ?? 5;
+    contador();
+  }
 
+  void contador() {
+    githubDevices = DevicesData.githubDevices!;
     // timer que actualiza el tiempo de vijencia del codigo
     timer1 = Timer.periodic(const Duration(seconds: 1), (timer) {
-      var aux = caduca.difference(DateTime.now());
+      var aux = githubDevices.expiresIn.difference(DateTime.now());
       if (aux.inMinutes > 0) {
         setState(() {
           tiempocaduca = "${aux.inMinutes} minutos";
@@ -52,8 +52,8 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     });
 
     // timer que en el que se verificara si el vodio es autorizado
-    timer2 =
-        Timer.periodic(Duration(seconds: interval), (timer) => validarCodigo());
+    timer2 = Timer.periodic(
+        Duration(seconds: githubDevices.interval), (timer) => validarCodigo());
   }
 
   @override
@@ -79,13 +79,15 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
               style: Theme.of(context).textTheme.headline6,
             ),
             SelectableText(
-              widget.arguments['user_code'], 
+              githubDevices.userCode,
               style: Theme.of(context).textTheme.headline3,
             ),
             if (timer1.isActive) Text("El codigo es valido por $tiempocaduca"),
             const SizedBox(height: 16),
             if (!timer1.isActive)
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: colorB, onPrimary: colorC),
                 onPressed: getCode,
                 child: const Text('Nuevo codigo'),
               ),
@@ -108,18 +110,16 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
 
     var data = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
     if (data['device_code'] != null && data['user_code'] != null) {
-      await boxdevices.putAll({
-        'device_code': data['device_code'],
-        'user_code': data['user_code'],
-        'verification_uri': data['verification_uri'],
-        'expires_in': DateTime.now()
+      DevicesData.githubDevices = GithubDevices.fromMap({
+        'deviceCode': data['device_code'],
+        'userCode': data['user_code'],
+        'verificationUri': data['verification_uri'],
+        'expiresIn': DateTime.now()
             .add(Duration(seconds: data['expires_in']))
-            .toString(),
+            .millisecondsSinceEpoch,
         'interval': data['interval'],
       });
-      Hive.box('sesionData').put('sesion_status', SesionStatus.verifying.name);
-      launchUrl(Uri.parse(data['verification_uri']));
-      NavegacionServies.navigateToReplacement(loginCodigoRoute);
+      contador();
     }
   }
 
@@ -127,8 +127,8 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     var res = await http.post(
       Uri.parse("https://github.com/login/oauth/access_token"),
       body: {
-        "client_id": widget.arguments['github_client_id'],
-        "device_code": widget.arguments['device_code'],
+        "client_id": DevicesData.githubClineteID,
+        "device_code": githubDevices.deviceCode,
         "grant_type": "urn:ietf:params:oauth:grant-type:device_code"
       },
       headers: {
@@ -138,8 +138,9 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     var data = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
 
     if (data['interval'] != null) {
-      interval = data['interval'];
-      Hive.box('deviceData').put('interval', interval);
+      var interval = data['interval'];
+      DevicesData.githubDevices = githubDevices.copyWith(interval: interval);
+      githubDevices = githubDevices.copyWith(interval: interval);
       timer2.cancel();
       timer2 = Timer.periodic(
           Duration(seconds: interval), (timer) => validarCodigo());
@@ -149,15 +150,23 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
       timer1.cancel();
       timer2.cancel();
 
-      var box = Hive.box('sesionData');
-      await box.putAll({
-        'sesion_status': SesionStatus.login.name,
-        'Github': {
-          "access_token": "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",
-          "token_type": "bearer",
-        }
-      });
-      Sesion.getAcountGithub();
+      var perfilbox = Hive.box<PerfilesModel>('Perfiles');
+      var date = DateTime.now();
+
+      Sesion.status = SesionStatus.login;
+      Sesion.sesionGitHub =
+          SesionGitHub.fromMap(Map<String, dynamic>.from(data));
+      Sesion.perfil = date.millisecondsSinceEpoch.toString();
+
+      await perfilbox.put(
+        date.millisecondsSinceEpoch.toString(),
+        PerfilesModel(
+          id: date.millisecondsSinceEpoch.toString(),
+          nombre: 'Personal',
+          creado: date,
+        ),
+      );
+      await Sesion.getAcountGithub();
       NavegacionServies.limpiar(homeRoute);
     }
   }

@@ -9,22 +9,23 @@ class GithubApi {
   final String _baseUrl = 'api.github.com';
 
   GithubApi() {
-    String g =
-        "${Sesion.sesionGitHub!.tokenType} ${Sesion.sesionGitHub!.accessToken}";
+    var git = Sesion.sesionGitHub;
     _headers = {
-      HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.acceptHeader: "application/vnd.github.v3+json",
-      if (g != " ") HttpHeaders.authorizationHeader: g,
+      HttpHeaders.acceptHeader: "application/json",
+      if (git != null)
+        HttpHeaders.authorizationHeader: "${git.tokenType} ${git.accessToken}",
     };
   }
 
   Future<dynamic> post(String path, [Map? data]) async {
     try {
+      var url = Uri.https(_baseUrl, path);
       var res = await http.post(
-        Uri.https(_baseUrl, path),
+        url,
         body: data,
         headers: _headers,
       );
+      print(url);
       var datares = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
       return datares;
     } catch (e) {
@@ -40,14 +41,11 @@ class GithubApi {
     try {
       var request =
           http.Request('GET', Uri.https(_baseUrl, path, queryParameters));
-      // http.Request('GET', Uri.parse('https://api.github.com/user/repos'));
-      // http.Request('GET',
-      //     Uri.parse('https://api.github.com/users/LuisDeLaValie/repos'));
 
       request.headers.addAll(_headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(milliseconds: 3000));
+          await request.send().timeout(const Duration(seconds: 6));
 
       return jsonDecode(await response.stream.bytesToString());
     } catch (e) {

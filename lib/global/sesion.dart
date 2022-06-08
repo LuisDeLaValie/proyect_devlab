@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
+import '../api/github_api.dart';
+import 'devices_data.dart';
+
 enum SesionStatus { login, logout, verifying }
 
 class Sesion {
@@ -18,6 +21,11 @@ class Sesion {
     _box.put('name', val);
   }
 
+  static String? get perfil => _box.get('perfil');
+  static set perfil(String? val) {
+    _box.put('perfil', val);
+  }
+
   static String? get email => _box.get('email');
   static set email(String? val) {
     _box.put('email', val);
@@ -31,12 +39,12 @@ class Sesion {
   static SesionStatus get status => SesionStatus.values.byName(
       _box.get('sesion_status', defaultValue: SesionStatus.logout.name));
   static set status(SesionStatus val) {
-    _box.put('sesion_status', val);
+    _box.put('sesion_status', val.name);
   }
 
   static SesionGitHub? get sesionGitHub {
     var data = _box.get('Github');
-    if (data == null) {
+    if (data != null) {
       return SesionGitHub.fromMap(Map<String, dynamic>.from(data));
     } else {
       return null;
@@ -44,28 +52,15 @@ class Sesion {
   }
 
   static set sesionGitHub(SesionGitHub? val) {
-    _box.put('Github', val);
+    _box.put('Github', val?.toMap());
   }
 
-  static void getAcountGithub() async {
-    var boxdevices = Hive.box('deviceData');
+  static Future<void> getAcountGithub() async {
+    var git = sesionGitHub;
 
-    var res = await http.post(
-      Uri.parse("https://api.github.com/user"),
-      body: {
-        "client_id": boxdevices.get('github_client_id'),
-        "device_code": boxdevices.get('device_code'),
-        "grant_type": "urn:ietf:params:oauth:grant-type:device_code"
-      },
-      headers: {
-        "Accept": "application/vnd.github.v3+json",
-        "Authorization":
-            "${sesionGitHub?.tokenType} ${sesionGitHub?.accessToken}",
-      },
-    );
-    var data = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
+    var data = await GithubApi().get("user");
 
-    var usergithub = sesionGitHub?.copyWith(
+    var usergithub = git?.copyWith(
       perfil: data['html_url'],
       id: data['id'],
       user: data['login'],
@@ -74,12 +69,12 @@ class Sesion {
       email: data['email'],
     );
 
-    _box.putAll({
+    await _box.putAll({
       'user': data['login'],
       'name': data['name'],
       'avatar_url': data['avatar_url'],
       'email': data['email'],
-      'Github': usergithub!.toMap()
+      'Github': usergithub?.toMap()
     });
   }
 }
@@ -93,6 +88,7 @@ class SesionGitHub {
   final String name;
   final String avatarUrl;
   final String email;
+
   SesionGitHub({
     required this.id,
     required this.accessToken,
