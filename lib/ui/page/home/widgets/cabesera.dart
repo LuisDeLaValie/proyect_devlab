@@ -27,17 +27,6 @@ class _CabeseraState extends State<Cabesera> {
         SizedBox(
           width: 200,
           child: TextField(
-            cursorColor: colorC,
-            decoration: InputDecoration(
-              fillColor: colorB,
-              filled: true,
-              border: const OutlineInputBorder(
-                gapPadding: 2,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(100.0),
-                ),
-              ),
-            ),
             onChanged: widget.onChanged,
           ),
         ),

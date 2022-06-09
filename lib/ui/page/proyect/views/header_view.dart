@@ -10,6 +10,8 @@ import 'package:proyect_devlab/model/github_models/repositorio_model.dart';
 import 'package:proyect_devlab/provider/proyecto_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../shared/theme.dart';
+
 class HeaderView extends StatefulWidget {
   const HeaderView({Key? key}) : super(key: key);
 
@@ -21,50 +23,56 @@ class _HeaderViewState extends State<HeaderView> {
   @override
   Widget build(BuildContext context) {
     final pro = Provider.of<ProyectoProvider>(context);
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(pro.proyecto.nombre,
-                style: Theme.of(context).textTheme.headlineMedium),
-            if (pro.proyecto.repositorio.isEmpty)
-              TextButton(
-                onPressed: addRepositorio,
-                child: const Text('Agrege un repositorio'),
-              ),
-            if (pro.proyecto.repositorioMoel != null)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          launchUrl(Uri.parse(
-                              pro.proyecto.repositorioMoel?.creadorUrl ?? ""));
-                        },
-                        child: Text(pro.proyecto.creador),
-                      ),
-                      Text(
-                          "Lenguaje: ${pro.proyecto.repositorioMoel?.language ?? ""}"),
-                    ],
-                  ),
-                  IconButton(
-                    splashRadius: 1,
-                    onPressed: () {
-                      launchUrl(Uri.parse(pro.proyecto.repositorio));
-                    },
-                    icon: Icon((pro.proyecto.repositorioMoel?.private ?? false)
-                        ? Icons.vpn_lock
-                        : Icons.public),
-                  ),
-                ],
-              ),
-          ],
-        ),
-      ],
+    return Container(
+      color: colorD,
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SelectableText(pro.proyecto.nombre,
+                  style: Theme.of(context).textTheme.headlineMedium),
+              if (pro.proyecto.repositorio.isEmpty)
+                TextButton(
+                  onPressed: addRepositorio,
+                  child: const Text('Agrege un repositorio'),
+                ),
+              if (pro.proyecto.repositorioMoel != null)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            var url =
+                                pro.proyecto.repositorioMoel?.creadorUrl ?? "";
+                            launchUrl(Uri.parse(url));
+                          },
+                          child: Text(pro.proyecto.creador),
+                        ),
+                        Text(
+                            "Lenguaje: ${pro.proyecto.repositorioMoel?.language ?? ""}"),
+                      ],
+                    ),
+                    IconButton(
+                      splashRadius: 1,
+                      onPressed: () {
+                        launchUrl(Uri.parse(pro.proyecto.repositorio));
+                      },
+                      icon: Icon(
+                          (pro.proyecto.repositorioMoel?.private ?? false)
+                              ? Icons.vpn_lock
+                              : Icons.public),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

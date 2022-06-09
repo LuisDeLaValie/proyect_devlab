@@ -29,33 +29,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     contador();
   }
 
-  void contador() {
-    githubDevices = DevicesData.githubDevices!;
-    // timer que actualiza el tiempo de vijencia del codigo
-    timer1 = Timer.periodic(const Duration(seconds: 1), (timer) {
-      var aux = githubDevices.expiresIn.difference(DateTime.now());
-      if (aux.inMinutes > 0) {
-        setState(() {
-          tiempocaduca = "${aux.inMinutes} minutos";
-        });
-      } else if (aux.inSeconds > 0) {
-        setState(() {
-          tiempocaduca = "${aux.inSeconds} segundos";
-        });
-      } else {
-        timer1.cancel();
-        timer2.cancel();
-        setState(() {
-          tiempocaduca = "";
-        });
-      }
-    });
-
-    // timer que en el que se verificara si el vodio es autorizado
-    timer2 = Timer.periodic(
-        Duration(seconds: githubDevices.interval), (timer) => validarCodigo());
-  }
-
   @override
   void dispose() {
     timer1.cancel();
@@ -95,6 +68,33 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
         ),
       ),
     );
+  }
+
+  void contador() {
+    githubDevices = DevicesData.githubDevices!;
+    // timer que actualiza el tiempo de vijencia del codigo
+    timer1 = Timer.periodic(const Duration(seconds: 1), (timer) {
+      var aux = githubDevices.expiresIn.difference(DateTime.now());
+      if (aux.inMinutes > 0) {
+        setState(() {
+          tiempocaduca = "${aux.inMinutes} minutos";
+        });
+      } else if (aux.inSeconds > 0) {
+        setState(() {
+          tiempocaduca = "${aux.inSeconds} segundos";
+        });
+      } else {
+        timer1.cancel();
+        timer2.cancel();
+        setState(() {
+          tiempocaduca = "";
+        });
+      }
+    });
+
+    // timer que en el que se verificara si el vodio es autorizado
+    timer2 = Timer.periodic(
+        Duration(seconds: githubDevices.interval), (timer) => validarCodigo());
   }
 
   void getCode() async {

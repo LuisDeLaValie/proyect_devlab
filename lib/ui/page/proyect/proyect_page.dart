@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:proyect_devlab/model/proyecto_models/proyecto_model.dart';
+import 'package:proyect_devlab/ui/layout/desktop/home_desktop_layout.dart';
 
 import '../../../provider/proyecto_provider.dart';
+import '../../shared/theme.dart';
 import 'views/curpo_general_view.dart';
 import 'views/header_view.dart';
 
@@ -16,26 +18,17 @@ class ProyectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Proyect Page'),
-      ),
+    return HomeDesktopLayout(
       body: ChangeNotifierProvider(
         create: (_) => ProyectoProvider(proyecto),
         child: Column(
-          children: [
-            const HeaderView(),
-            Container(
-              color: Colors.black,
-              height: 1,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-            ),
-            const Expanded(child: CurpoGeneralView())
+          children: const [
+            HeaderView(),
+            SizedBox(height: 5),
+            Expanded(child: CurpoGeneralView())
           ],
         ),
       ),
     );
   }
-
-
 }
