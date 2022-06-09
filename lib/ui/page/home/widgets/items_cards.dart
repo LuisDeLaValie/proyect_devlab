@@ -21,10 +21,23 @@ class ItemsCards extends StatelessWidget {
         },
         child: Material(
           elevation: 2,
-          child: Column(
+          child: Stack(
             children: [
-              const Spacer(),
-              Text(repo.nombre, style: Theme.of(context).textTheme.bodyLarge),
+              Image.asset("assets/img/belzebuth.png"),
+              Column(
+                children: [
+                  const Spacer(),
+                  Container(
+                    width: double.infinity,
+                    color: Colors.black.withOpacity(0.4),
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      repo.nombre,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
