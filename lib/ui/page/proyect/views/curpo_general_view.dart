@@ -4,16 +4,17 @@ import 'package:proyect_devlab/provider/proyecto_provider.dart';
 import 'package:proyect_devlab/ui/page/proyect/views/problemas_view.dart';
 
 import '../widget/tab_bar_custom.dart';
+import 'configuracion_view.dart';
 
 class CurpoGeneralView extends StatelessWidget {
   const CurpoGeneralView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final pro = Provider.of<ProyectoProvider>(context);
+    var repr = context.watch<ProyectoProvider>().proyecto.repositorioMoel;
     return DefaultTabController(
       initialIndex: 0,
-      length: pro.proyecto.repositorioMoel != null ? 5 : 4,
+      length: repr != null ? 5 : 4,
       child: Column(
         children: [
           const TabBarCustom(),
@@ -23,8 +24,8 @@ class CurpoGeneralView extends StatelessWidget {
                 const Center(child: Text('General')),
                 const Center(child: Text('Archivos')),
                 const Center(child: Text('Documentacion')),
-                if (pro.proyecto.repositorioMoel != null) const ProblemasView(),
-                const Center(child: Text('Configuracion')),
+                if (repr != null) const ProblemasView(),
+                const ConfiguracionView(),
               ],
             ),
           )

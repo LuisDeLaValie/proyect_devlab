@@ -13,6 +13,8 @@ var themaOscuro = ThemeData(
   textButtonTheme: textButtonTheme,
   textTheme: textTheme,
   inputDecorationTheme: inputDecorationTheme,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(primary: colorB, onPrimary: colorC,)),
 );
 
 var appBarTheme = AppBarTheme(
@@ -51,6 +53,7 @@ var inputDecorationTheme = InputDecorationTheme(
   filled: true,
   fillColor: colorB,
   focusColor: colorC,
+  labelStyle: TextStyle(color: colorC),
   contentPadding: const EdgeInsets.all(10),
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(color: colorB, width: 1),

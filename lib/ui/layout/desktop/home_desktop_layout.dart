@@ -93,13 +93,15 @@ class _UserAcountState extends State<UserAcount> {
                 onTap: () async {
                   await Hive.box('sesionData').clear();
                   await Hive.box('deviceData').clear();
-                  Hive.box('Proyectos').clear();
-                  Hive.box('Repositorios').clear();
-                  Hive.box('Issues').clear();
-                  Hive.box('Perfiles').clear();
 
                   DevicesData.initial();
                   await NavegacionServies.limpiar(loginRoute);
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    Hive.box('Proyectos').clear();
+                    Hive.box('Repositorios').clear();
+                    Hive.box('Issues').clear();
+                    Hive.box('Perfiles').clear();
+                  });
                 },
               ),
             ],

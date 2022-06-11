@@ -13,13 +13,15 @@ class ProyectoModel extends HiveObject {
   @HiveField(2)
   String creador;
   @HiveField(3)
-  String repositorio;
+  String? repositorio;
   @HiveField(4)
   String path;
   @HiveField(5)
   DateTime createAt;
   @HiveField(6)
   RepositorioModel? repositorioMoel;
+  @HiveField(7)
+  String? img;
 
   ProyectoModel({
     required this.id,
@@ -29,7 +31,6 @@ class ProyectoModel extends HiveObject {
     required this.path,
     required this.createAt,
     this.repositorioMoel,
+    this.img,
   });
-
- 
 }

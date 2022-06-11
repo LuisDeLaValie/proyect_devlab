@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
 
 import '../api/github_api.dart';
-import 'devices_data.dart';
 
 enum SesionStatus { login, logout, verifying }
 

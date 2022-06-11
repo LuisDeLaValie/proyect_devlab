@@ -28,7 +28,6 @@ void main() async {
   await Hive.openBox<RepositorioModel>('Repositorios');
   await Hive.openBox<IssuesModel>('Issues');
   await Hive.openBox<PerfilesModel>('Perfiles');
-
   if (devicebox.isEmpty) DevicesData.initial();
 
   // log(datasesion.toMap().toString(), name: 'datasesion');

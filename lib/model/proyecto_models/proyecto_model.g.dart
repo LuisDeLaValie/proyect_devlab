@@ -20,17 +20,18 @@ class ProyectoModelAdapter extends TypeAdapter<ProyectoModel> {
       id: fields[0] as int,
       nombre: fields[1] as String,
       creador: fields[2] as String,
-      repositorio: fields[3] as String,
+      repositorio: fields[3] as String?,
       path: fields[4] as String,
       createAt: fields[5] as DateTime,
       repositorioMoel: fields[6] as RepositorioModel?,
+      img: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ProyectoModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class ProyectoModelAdapter extends TypeAdapter<ProyectoModel> {
       ..writeByte(5)
       ..write(obj.createAt)
       ..writeByte(6)
-      ..write(obj.repositorioMoel);
+      ..write(obj.repositorioMoel)
+      ..writeByte(7)
+      ..write(obj.img);
   }
 
   @override

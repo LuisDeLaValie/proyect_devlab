@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:proyect_devlab/global/devices_data.dart';
+import 'package:proyect_devlab/global/sesion.dart';
 
 import 'package:proyect_devlab/model/proyecto_models/proyecto_model.dart';
 import 'package:proyect_devlab/services/manejo_archivos_services.dart';
 
+import '../../../../model/perfiles_model.dart';
 import '../../../../services/navegacion_servies.dart';
-import '../../../shared/theme.dart';
 
 class Cabesera extends StatefulWidget {
   final void Function(String)? onChanged;
@@ -43,11 +45,14 @@ class _CabeseraState extends State<Cabesera> {
       builder: (_) => SimpleDialog(
         title: const Text("Crear nuevo Prollecto"),
         children: [
-          TextField(
-            decoration: const InputDecoration(
-              labelText: "Nombre del proyecto",
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                labelText: "Nombre del proyecto",
+              ),
+              onSubmitted: createproyect,
             ),
-            onSubmitted: createproyect,
           ),
         ],
       ),
@@ -57,15 +62,22 @@ class _CabeseraState extends State<Cabesera> {
   Future<void> createproyect(String nombre) async {
     Navigator.of(context).pop();
     try {
-      var path = await ManejoArchivosServices().iniciarProyecto(nombre);
+      var sesion =
+          Hive.box<PerfilesModel>('Perfiles').get(Sesion.perfil)?.nombre;
+      if (sesion == null) throw "Error a obtener directrio";
+      var auxpath =
+          "${DevicesData.locapath}/$sesion/${nombre.replaceAll(" ", "_")}";
+
+      var path = await ManejoArchivosServices().iniciarProyecto(auxpath);
       var box = Hive.box<ProyectoModel>('Proyectos');
       var id = box.length;
+
       box.put(
           id,
           ProyectoModel(
             id: id,
             nombre: nombre,
-            creador: "LuisDeLaValie",
+            creador: Sesion.name ?? "",
             repositorio: "",
             path: path!,
             createAt: DateTime.now(),

@@ -25,7 +25,6 @@ class GithubApi {
         body: data,
         headers: _headers,
       );
-      print(url);
       var datares = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
       return datares;
     } catch (e) {
