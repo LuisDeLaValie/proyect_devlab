@@ -14,10 +14,21 @@ class ProyectoProvider with ChangeNotifier {
     _proyecto = proyecto;
   }
 
+  List<String>? branchs;
+  List<String>? commits;
+  String? commit;
+
   late ProyectoModel _proyecto;
   ProyectoModel get proyecto => _proyecto;
   set proyecto(ProyectoModel val) {
     _proyecto = val;
+    notifyListeners();
+  }
+
+  bool _isGit = false;
+  bool get isGit => _isGit;
+  set isGit(bool val) {
+    _isGit = val;
     notifyListeners();
   }
 

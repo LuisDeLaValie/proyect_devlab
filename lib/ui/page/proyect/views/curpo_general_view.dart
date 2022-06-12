@@ -5,6 +5,7 @@ import 'package:proyect_devlab/ui/page/proyect/views/problemas_view.dart';
 
 import '../widget/tab_bar_custom.dart';
 import 'configuracion_view.dart';
+import 'general_vew.dart';
 
 class CurpoGeneralView extends StatelessWidget {
   const CurpoGeneralView({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class CurpoGeneralView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var repr = context.watch<ProyectoProvider>().proyecto.repositorioMoel;
+    print("CurpoGeneralView");
     return DefaultTabController(
       initialIndex: 0,
       length: repr != null ? 5 : 4,
@@ -21,7 +23,7 @@ class CurpoGeneralView extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: <Widget>[
-                const Center(child: Text('General')),
+                const GeneralVew(),
                 const Center(child: Text('Archivos')),
                 const Center(child: Text('Documentacion')),
                 if (repr != null) const ProblemasView(),
