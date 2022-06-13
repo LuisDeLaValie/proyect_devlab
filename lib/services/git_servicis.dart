@@ -9,21 +9,28 @@ class GitServices {
 
       var archAux = (res.stdout as String).replaceAll(RegExp("\t"), "\n");
       var arch = archAux.split("\n");
-      getBranch(directory);
+
       return arch.contains(".git");
     } catch (e) {
       rethrow;
     }
   }
 
+
+
+
+
   /// funcion que obtiene las ramas del repositorio
   Future<List<String>?> getBranch(String directory) async {
     try {
       await Process.start("cd", [directory], runInShell: true);
+      // git branch -a | grep -v ‘remotes’
       var res = await Process.run('git', ['branch'], runInShell: true);
       if (res.exitCode != 0) throw res.stderr;
       var branch = (res.stdout as String).split("\n");
+      print(res.stdout);
       branch.removeWhere((element) => element.isEmpty);
+      
       return branch;
     } catch (e) {
       rethrow;

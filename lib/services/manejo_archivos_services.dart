@@ -48,4 +48,17 @@ class ManejoArchivosServices {
       throw e.toString();
     }
   }
+
+  Future<List<String>?> getDirectoryTree(String directory) async {
+    try {
+      var res = await Process.run('ls', ['-lah', directory], runInShell: true);
+      if (res.exitCode != 0) throw res.stderr;
+
+      var archAux = (res.stdout as String);
+      var arch = archAux.split("\n");
+      return arch;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

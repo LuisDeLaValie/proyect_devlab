@@ -5,7 +5,7 @@ import 'package:proyect_devlab/ui/page/proyect/views/problemas_view.dart';
 
 import '../widget/tab_bar_custom.dart';
 import 'configuracion_view.dart';
-import 'general_vew.dart';
+import '../pestañas/general_vew.dart';
 
 class CurpoGeneralView extends StatelessWidget {
   const CurpoGeneralView({Key? key}) : super(key: key);
