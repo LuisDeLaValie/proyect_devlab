@@ -15,15 +15,48 @@ class ProyectoProvider with ChangeNotifier {
     _proyecto = proyecto;
   }
 
-  List<String>? branchs;
-  List<String>? commits;
-  List<ItemsDirectoryModel>? treefiles;
-  String? commit;
-
+  ///
+  /// Get y Set
+  ///
   late ProyectoModel _proyecto;
   ProyectoModel get proyecto => _proyecto;
   set proyecto(ProyectoModel val) {
     _proyecto = val;
+    notifyListeners();
+  }
+
+  List<String>? _branchs;
+  List<String>? get branchs => _branchs;
+  set branchs(List<String>? val) {
+    _branchs = val;
+    notifyListeners();
+  }
+
+  List<String>? _commits;
+  List<String>? get commits => _commits;
+  set commits(List<String>? val) {
+    _commits = val;
+    notifyListeners();
+  }
+
+  List<ItemsDirectoryModel>? _archivos;
+  List<ItemsDirectoryModel>? get archivos => _archivos;
+  set archivos(List<ItemsDirectoryModel>? val) {
+    _archivos = val;
+    notifyListeners();
+  }
+
+  String? _commit;
+  String? get commit => _commit;
+  set commit(String? val) {
+    _commit = val;
+    notifyListeners();
+  }
+
+  String? _branch;
+  String? get branch => _branch;
+  set branch(String? val) {
+    _branch = val;
     notifyListeners();
   }
 
@@ -33,6 +66,10 @@ class ProyectoProvider with ChangeNotifier {
     _isGit = val;
     notifyListeners();
   }
+
+  ///
+  /// Metosos
+  ///
 
   Future<void> eliminarproyecto() async {
     await Directory(proyecto.path).delete(recursive: true);
@@ -95,18 +132,12 @@ class ProyectoProvider with ChangeNotifier {
     }
   }
 
-  // void getBranchRemote() async {
-  //   var res =
-  //       await GithubApi().get("repos/${proyecto.repositorio}/branches") as List;
-  //   var branh = res.map((e) => e["name"]).toList();
-  //   var uxbranchs = branh.removeWhere((element) => false)
-  // }
-
-  void getTree() async {
+  Future<void> getTree() async {
     var res = await ManejoArchivosServices()
         .getDirectoryTree("${proyecto.path}/proyecto");
     res?.removeWhere((element) => element.isEmpty);
     var data = res?.map((e) => ItemsDirectoryModel.fromString(e)).toList();
-    treefiles = data;
+    _archivos = data;
+    notifyListeners();
   }
 }

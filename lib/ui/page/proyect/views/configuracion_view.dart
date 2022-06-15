@@ -14,7 +14,6 @@ class _ConfiguracionViewState extends State<ConfiguracionView> {
   List<bool> _isOpen = [true, false];
   @override
   Widget build(BuildContext context) {
-    print("ConfiguracionView");
     return SingleChildScrollView(
       child: ExpansionPanelList(
         dividerColor: colorB,
@@ -26,7 +25,7 @@ class _ConfiguracionViewState extends State<ConfiguracionView> {
                   "Proyecto",
                   style: Theme.of(context).textTheme.titleLarge,
                 )),
-            body:  Configuracion(),
+            body:  const Configuracion(),
           ),
         ],
         expansionCallback: (int index, bool isExpanded) {

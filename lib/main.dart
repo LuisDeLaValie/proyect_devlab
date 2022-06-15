@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -22,7 +21,7 @@ void main() async {
   Hive.registerAdapter(RepositorioModelAdapter());
   Hive.registerAdapter(PerfilesModelAdapter());
 
-  var datasesion = await Hive.openBox('sesionData');
+ await Hive.openBox('sesionData');
   var devicebox = await Hive.openBox('deviceData');
   await Hive.openBox<ProyectoModel>('Proyectos');
   await Hive.openBox<RepositorioModel>('Repositorios');

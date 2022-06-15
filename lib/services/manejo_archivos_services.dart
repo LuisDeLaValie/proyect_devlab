@@ -1,11 +1,6 @@
 import 'dart:io';
 
-import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-
-import '../global/devices_data.dart';
-import '../global/sesion.dart';
-import '../model/perfiles_model.dart';
 
 class ManejoArchivosServices {
   static Future<String?> get localPath async {

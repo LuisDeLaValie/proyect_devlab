@@ -68,3 +68,4 @@ var inputDecorationTheme = InputDecorationTheme(
     borderRadius: BorderRadius.all(Radius.circular(100.0)),
   ),
 );
+

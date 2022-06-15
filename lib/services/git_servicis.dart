@@ -28,7 +28,6 @@ class GitServices {
       var res = await Process.run('git', ['branch'], runInShell: true);
       if (res.exitCode != 0) throw res.stderr;
       var branch = (res.stdout as String).split("\n");
-      print(res.stdout);
       branch.removeWhere((element) => element.isEmpty);
       
       return branch;
