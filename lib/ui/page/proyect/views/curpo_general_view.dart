@@ -22,7 +22,8 @@ class CurpoGeneralView extends StatelessWidget {
         children: [
           TabBar(
             unselectedLabelColor: Colors.grey,
-            labelColor: Colors.black,
+            labelColor: Colors.grey,
+            indicatorColor: Colors.orange,
             tabs: lista.map((e) => Tab(child: Text(e['name']))).toList(),
           ),
           Expanded(

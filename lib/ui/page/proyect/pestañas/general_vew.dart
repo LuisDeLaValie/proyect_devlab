@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../provider/proyecto_provider.dart';
 import '../../../shared/theme.dart';
+import '../widget/general/ruta_path.dart';
 import '../widget/general/table_archivos.dart';
 import '../widget/general/header_buttons.dart';
 import '../widget/general/table_header.dart';
@@ -19,6 +20,7 @@ class GeneralVew extends StatelessWidget {
           children: [
             Row(
               children: const [
+                RutaPath(),
                 Spacer(),
                 HeaderButtons(),
                 SizedBox(width: 10),

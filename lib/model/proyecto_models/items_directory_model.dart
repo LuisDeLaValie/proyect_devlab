@@ -38,7 +38,7 @@ class ItemsDirectoryModel {
         "";
     aux = aux.replaceFirst(RegExp("$fecha +"), "");
 
-    var nombre = aux;
+    var nombre = aux.split("->").first;
 
     return ItemsDirectoryModel(
       permisos: permisos,

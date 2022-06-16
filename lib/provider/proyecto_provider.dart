@@ -132,11 +132,18 @@ class ProyectoProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getTree() async {
-    var res = await ManejoArchivosServices()
-        .getDirectoryTree("${proyecto.path}/proyecto");
+  String? currentDirectory;
+  Future<void> getTree([String? path]) async {
+    if (path == null) {
+      currentDirectory = "${proyecto.path}/proyecto";
+    }else{
+      currentDirectory = "${proyecto.path}/proyecto/$path";
+    }
+    path = currentDirectory!;
+    var res = await ManejoArchivosServices().getDirectoryTree(path);
     res?.removeWhere((element) => element.isEmpty);
     var data = res?.map((e) => ItemsDirectoryModel.fromString(e)).toList();
+    data?.removeWhere((element) => RegExp(r"^\.+$").hasMatch(element.nombre));
     _archivos = data;
     notifyListeners();
   }
