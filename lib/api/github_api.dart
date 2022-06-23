@@ -33,10 +33,10 @@ class GithubApi {
   }
 
   Future<dynamic> get(
-    String path, [
+    String path, {
     Map? data,
     Map<String, dynamic>? queryParameters,
-  ]) async {
+  }) async {
     try {
       var request =
           http.Request('GET', Uri.https(_baseUrl, path, queryParameters));

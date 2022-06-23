@@ -25,7 +25,6 @@ void main() async {
   var devicebox = await Hive.openBox('deviceData');
   await Hive.openBox<ProyectoModel>('Proyectos');
   await Hive.openBox<RepositorioModel>('Repositorios');
-  await Hive.openBox<IssuesModel>('Issues');
   await Hive.openBox<PerfilesModel>('Perfiles');
   if (devicebox.isEmpty) DevicesData.initial();
 

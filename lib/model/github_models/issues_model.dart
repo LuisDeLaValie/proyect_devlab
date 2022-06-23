@@ -1,37 +1,26 @@
 import 'dart:convert';
+
 import 'package:hive/hive.dart';
 
-part 'issues_model.g.dart';
-
-@HiveType(typeId: 2)
-class IssuesModel extends HiveObject {
-  @HiveField(0)
+class IssuesModel {
   final String title;
-  @HiveField(1)
   final String body;
-  @HiveField(2)
   final String commentsUrl;
-  @HiveField(3)
+  final String url;
   final String creador;
-  @HiveField(4)
   final String creadorUrl;
-  @HiveField(5)
   final String creadorAvatarUrl;
-  @HiveField(6)
   final String state;
-  @HiveField(7)
   final int comments;
-  @HiveField(8)
   final DateTime createdAt;
-  @HiveField(9)
   final DateTime updatedAt;
-  @HiveField(10)
   final List<LabesIssuesModel?> labels;
 
   IssuesModel({
     required this.title,
     required this.body,
     required this.commentsUrl,
+    required this.url,
     required this.creador,
     required this.creadorUrl,
     required this.creadorAvatarUrl,
@@ -46,6 +35,7 @@ class IssuesModel extends HiveObject {
     String? title,
     String? body,
     String? commentsUrl,
+    String? url,
     String? creador,
     String? creadorUrl,
     String? creadorAvatarUrl,
@@ -59,6 +49,7 @@ class IssuesModel extends HiveObject {
       title: title ?? this.title,
       body: body ?? this.body,
       commentsUrl: commentsUrl ?? this.commentsUrl,
+      url: url ?? this.url,
       creador: creador ?? this.creador,
       creadorUrl: creadorUrl ?? this.creadorUrl,
       creadorAvatarUrl: creadorAvatarUrl ?? this.creadorAvatarUrl,
@@ -91,6 +82,7 @@ class IssuesModel extends HiveObject {
       title: map['title'] ?? '',
       body: map['body'] ?? '',
       commentsUrl: map['comments_url'] ?? '',
+      url: map['html_url'] ?? '',
       creador: map['user']['login'] ?? '',
       creadorUrl: map['user']['html_url'] ?? '',
       creadorAvatarUrl: map['user']['avatar_url'] ?? '',
@@ -109,17 +101,11 @@ class IssuesModel extends HiveObject {
       IssuesModel.fromMap(json.decode(source));
 }
 
-@HiveType(typeId: 3)
-class LabesIssuesModel extends HiveObject {
-  @HiveField(0)
+class LabesIssuesModel {
   final String url;
-  @HiveField(1)
   final String name;
-  @HiveField(2)
   final String color;
-  @HiveField(3)
   final String description;
-
   LabesIssuesModel({
     required this.url,
     required this.name,

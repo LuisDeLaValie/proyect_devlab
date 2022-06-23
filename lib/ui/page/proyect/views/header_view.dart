@@ -59,9 +59,10 @@ class HeaderView extends StatelessWidget {
                           splashRadius: 1,
                           tooltip: "Ver repositorio",
                           onPressed: () {
+                            var url =
+                                pro.proyecto.repositorioMoel?.htmlUrl ?? "";
                             launchUrl(
-                              Uri.parse(
-                                  pro.proyecto.repositorioMoel?.htmlUrl ?? ""),
+                              Uri.parse(url),
                               mode: LaunchMode.externalNonBrowserApplication,
                             );
                           },
