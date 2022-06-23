@@ -40,7 +40,11 @@ dependencies:
   tdtxle_inputs_flutter:
     git:
       url: https://github.com/LuisDeLaValie/tdtxle_inputs_flutter.git
-      ref: master
+      tag: 1.2.2+1
+  tdtxle_fonts:
+    git:
+      url: https://github.com/LuisDeLaValie/tdtxle_fonts_flutter.git
+      tag: 0.0.1
 
 dev_dependencies:
   build_runner: ^2.1.11

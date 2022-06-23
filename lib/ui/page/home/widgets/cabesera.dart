@@ -66,7 +66,7 @@ class _CabeseraState extends State<Cabesera> {
           Hive.box<PerfilesModel>('Perfiles').get(Sesion.perfil)?.nombre;
       if (sesion == null) throw "Error a obtener directrio";
       var auxpath =
-          "${DevicesData.locapath}/$sesion/${nombre.replaceAll(" ", "_")}";
+          "${DevicesData.locapath}/$sesion/${nombre.replaceAll(" ", "_")}/{proyecto,Documentos}";
 
       var path = await ManejoArchivosServices().iniciarProyecto(auxpath);
       var box = Hive.box<ProyectoModel>('Proyectos');

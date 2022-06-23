@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyect_devlab/provider/proyecto_provider.dart';
 import 'package:proyect_devlab/ui/page/proyect/pesta%C3%B1as/problemas_view.dart';
+import 'package:tdtxle_fonts/tdtxle_fonts.dart';
 
+import '../pestañas/documentacion.dart';
 import '../pestañas/problemas_view.dart';
 import 'configuracion_view.dart';
 import '../pestañas/general_vew.dart';
@@ -24,7 +26,12 @@ class CurpoGeneralView extends StatelessWidget {
             unselectedLabelColor: Colors.grey,
             labelColor: Colors.grey,
             indicatorColor: Colors.orange,
-            tabs: lista.map((e) => Tab(child: Text(e['name']))).toList(),
+            tabs: lista
+                .map((e) => Tab(
+                      icon: Icon(e['icon']),
+                      child: Text(e['name']),
+                    ))
+                .toList(),
           ),
           Expanded(
             child: TabBarView(
@@ -40,13 +47,13 @@ class CurpoGeneralView extends StatelessWidget {
     return [
       {
         'name': 'General',
-        'icon': Icons.home,
+        'icon': IconsTDTxLE.nf_mdi_file_tree,
         'page': const GeneralVew(),
       },
       {
         'name': 'Documentos',
-        'icon': Icons.error,
-        'page': const Center(child: Text('Documentacion')),
+        'icon': IconsTDTxLE.nf_mdi_file_document_box,
+        'page': const Documentacion(),
       },
       if (souwPorblem)
         {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyect_devlab/provider/proyecto_provider.dart';
+import 'package:tdtxle_fonts/tdtxle_fonts.dart';
 import 'package:tdtxle_inputs_flutter/inputs/img_perfil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,7 +43,7 @@ class HeaderView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SelectableText(
                           focusNode: _fosus[0],
@@ -53,7 +54,8 @@ class HeaderView extends StatelessWidget {
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
                         IconButton(
-                          iconSize: 20,
+                          iconSize: 30,
+                          padding: const EdgeInsets.all(0.1),
                           splashRadius: 1,
                           tooltip: "Ver repositorio",
                           onPressed: () {
@@ -63,10 +65,7 @@ class HeaderView extends StatelessWidget {
                               mode: LaunchMode.externalNonBrowserApplication,
                             );
                           },
-                          icon: Icon(
-                              (pro.proyecto.repositorioMoel?.private ?? false)
-                                  ? Icons.vpn_lock
-                                  : Icons.public),
+                          icon: const Icon(IconsTDTxLE.nf_dev_github_badge),
                         )
                       ],
                     ),
@@ -84,11 +83,13 @@ class HeaderView extends StatelessWidget {
               const SizedBox(height: 10),
               Row(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const Icon(IconsTDTxLE.nf_dev_git_branch),
                   SelectableText(focusNode: _fosus[2], "Branch: ${pro.branch}"),
                   const SizedBox(width: 10),
+                  const Icon(IconsTDTxLE.nf_dev_git_commit),
                   SelectableText(focusNode: _fosus[3], "Commit: ${pro.commit}"),
                 ],
               ),
