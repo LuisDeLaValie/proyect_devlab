@@ -22,7 +22,7 @@ class ItemsDirectoryModel {
         nombre: datos,
       );
     }
-    var permisos = datos.substring(0, 10);
+    var permisos = RegExp(r'[rwxld-]{10}@?').firstMatch(datos)?[0] ?? "";
     var aux = datos.replaceFirst(RegExp(permisos), "");
 
     var fiels = aux.split(" ").firstWhere((element) => element.isNotEmpty);

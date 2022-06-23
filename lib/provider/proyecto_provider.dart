@@ -18,6 +18,9 @@ class ProyectoProvider with ChangeNotifier {
   ///
   /// Get y Set
   ///
+
+  /// ========== General ==========
+
   late ProyectoModel _proyecto;
   ProyectoModel get proyecto => _proyecto;
   set proyecto(ProyectoModel val) {
@@ -67,9 +70,19 @@ class ProyectoProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// ========== Documentacio ==========
+
+  List<ItemsDirectoryModel>? _documentos;
+  List<ItemsDirectoryModel>? get documentos => _documentos;
+  set documentos(List<ItemsDirectoryModel>? val) {
+    _documentos = val;
+  }
+
   ///
   /// Metosos
   ///
+
+  /// ========== General ==========
 
   Future<void> eliminarproyecto() async {
     await Directory(proyecto.path).delete(recursive: true);
@@ -136,7 +149,7 @@ class ProyectoProvider with ChangeNotifier {
   Future<void> getTree([String? path]) async {
     if (path == null) {
       currentDirectory = "${proyecto.path}/proyecto";
-    }else{
+    } else {
       currentDirectory = "${proyecto.path}/proyecto/$path";
     }
     path = currentDirectory!;
@@ -146,5 +159,35 @@ class ProyectoProvider with ChangeNotifier {
     data?.removeWhere((element) => RegExp(r"^\.+$").hasMatch(element.nombre));
     _archivos = data;
     notifyListeners();
+  }
+
+  /// ========== Documentacio ==========
+
+  Future<void> getDocumentos() async {
+    try {
+      var path = "${proyecto.path}/Documentos";
+      var res = await ManejoArchivosServices().getDirectoryTree(path);
+      res?.removeWhere((element) => element.isEmpty);
+      res?.removeWhere((element) => RegExp(r"^[rwxld-]{10} +\d+ +\w+ + \w+ +(\d+\w?) +(\w{3} \d{2} \d{2}:\d{2}) .{1,2}[\W]$").hasMatch(element));
+      var data = res?.map((e) => ItemsDirectoryModel.fromString(e)).toList();
+      data?.removeWhere((element) => RegExp(r"^\.+$").hasMatch(element.nombre));
+      data?.removeAt(0);
+      data?.removeWhere((element) => element.permisos[0] != "-");
+      _documentos = data;
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> crearDocumento(String nombre, String typo) async {
+    try {
+      var path = "${proyecto.path}/Documentos/$nombre.$typo";
+      var res = await Process.run('touch', [path], runInShell: true);
+      if (res.exitCode != 0) throw res.stderr;
+      await getDocumentos();
+    } catch (e) {
+      rethrow;
+    }
   }
 }
