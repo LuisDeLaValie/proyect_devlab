@@ -1,29 +1,32 @@
 import 'dart:convert';
 
-import 'package:hive/hive.dart';
 
 class IssuesModel {
   final String title;
   final String body;
+  final int number;
   final String commentsUrl;
   final String url;
   final String creador;
   final String creadorUrl;
   final String creadorAvatarUrl;
+  final int creadorId;
   final String state;
   final int comments;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<LabesIssuesModel?> labels;
+  final List<LabesIssuesModel>? labels;
 
   IssuesModel({
     required this.title,
     required this.body,
+    required this.number,
     required this.commentsUrl,
     required this.url,
     required this.creador,
     required this.creadorUrl,
     required this.creadorAvatarUrl,
+    required this.creadorId,
     required this.state,
     required this.comments,
     required this.createdAt,
@@ -34,16 +37,18 @@ class IssuesModel {
   IssuesModel copyWith({
     String? title,
     String? body,
+    int? number,
     String? commentsUrl,
     String? url,
     String? creador,
     String? creadorUrl,
     String? creadorAvatarUrl,
+    int? creadorId,
     String? state,
     int? comments,
     DateTime? createdAt,
     DateTime? updatedAt,
-    List<LabesIssuesModel?>? labels,
+    List<LabesIssuesModel>? labels,
   }) {
     return IssuesModel(
       title: title ?? this.title,
@@ -53,8 +58,10 @@ class IssuesModel {
       creador: creador ?? this.creador,
       creadorUrl: creadorUrl ?? this.creadorUrl,
       creadorAvatarUrl: creadorAvatarUrl ?? this.creadorAvatarUrl,
+      creadorId: creadorId ?? this.creadorId,
       state: state ?? this.state,
       comments: comments ?? this.comments,
+      number: number ?? this.number,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       labels: labels ?? this.labels,
@@ -73,25 +80,30 @@ class IssuesModel {
       'comments': comments,
       'createdAt': createdAt.toString(),
       'updatedAt': updatedAt.toString(),
-      'labels': labels.map((x) => x?.toMap()).toList(),
+      'labels': labels?.map((x) => x.toMap()).toList(),
     };
   }
 
   factory IssuesModel.fromMap(Map<String, dynamic> map) {
+    var labels = map['labels'];
     return IssuesModel(
       title: map['title'] ?? '',
       body: map['body'] ?? '',
+      number: map['number']?.toInt() ?? 0,
       commentsUrl: map['comments_url'] ?? '',
       url: map['html_url'] ?? '',
       creador: map['user']['login'] ?? '',
       creadorUrl: map['user']['html_url'] ?? '',
       creadorAvatarUrl: map['user']['avatar_url'] ?? '',
+      creadorId: map['user']['id'] ?? '',
       state: map['state'] ?? '',
       comments: map['comments']?.toInt() ?? 0,
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
-      labels: List<LabesIssuesModel?>.from(
-          map['labels']?.map((x) => LabesIssuesModel.fromMap(x))),
+      labels: (labels != null)
+          ? List<LabesIssuesModel>.from(
+              map['labels']?.map((x) => LabesIssuesModel.fromMap(x)))
+          : null,
     );
   }
 
